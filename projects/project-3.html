@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project 3 — Hung-Yu Lin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+    :root { --color-bg:#ffffff;--color-text:#111111;--color-muted:#6b7280;--color-accent:#2563eb;--color-surface:#f4f4f5;--color-border:#e5e7eb;--font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;--max-w:1000px;--nav-h:64px;--r:6px; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
+    body{font-family:var(--font);background:var(--color-bg);color:var(--color-text);line-height:1.6;font-size:16px;}
+    nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--color-border);z-index:100;}
+    .nav-inner{max-width:var(--max-w);margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;justify-content:space-between;}
+    .nav-logo{font-weight:600;font-size:15px;color:var(--color-text);text-decoration:none;letter-spacing:-0.01em;}
+    .nav-back{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;color:var(--color-muted);text-decoration:none;transition:color 0.15s;}
+    .nav-back:hover{color:var(--color-text);}
+    main{padding-top:var(--nav-h);}
+    .container{max-width:var(--max-w);margin:0 auto;padding:80px 24px;text-align:center;}
+    .coming-soon-icon{width:72px;height:72px;background:var(--color-surface);border:2px dashed var(--color-border);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;}
+    .coming-soon-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--color-accent);margin-bottom:12px;}
+    .coming-soon-title{font-size:clamp(24px,4vw,40px);font-weight:600;letter-spacing:-0.03em;margin-bottom:16px;}
+    .coming-soon-desc{font-size:16px;color:var(--color-muted);max-width:480px;margin:0 auto 40px;line-height:1.7;}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:var(--r);font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;transition:all 0.15s;border:1px solid var(--color-border);color:var(--color-text);background:transparent;font-family:var(--font);}
+    .btn:hover{background:var(--color-surface);border-color:#9ca3af;}
+    footer{border-top:1px solid var(--color-border);padding:24px;text-align:center;margin-top:80px;}
+    footer p{font-size:13px;color:var(--color-muted);}
+    :focus-visible{outline:2px solid var(--color-accent);outline-offset:3px;}
+    @media (prefers-color-scheme:dark){:root{--color-bg:#0f0f0f;--color-text:#f0f0f0;--color-muted:#9ca3af;--color-surface:#1c1c1c;--color-border:#2a2a2a;}nav{background:rgba(15,15,15,0.92);}}
+  </style>
+</head>
+<body>
+
+<nav aria-label="Primary">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">HL</a>
+    <a href="../index.html#projects" class="nav-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to Projects
+    </a>
+  </div>
+</nav>
+
+<main>
+  <div class="container">
+    <div class="coming-soon-icon" aria-hidden="true">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>
+    </div>
+    <p class="coming-soon-label">Project 3</p>
+    <h1 class="coming-soon-title">Coming Soon</h1>
+    <p class="coming-soon-desc">This project page is under construction. Details, screenshots, and demo video will be added soon.</p>
+    <a href="../index.html#projects" class="btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to Projects
+    </a>
+  </div>
+</main>
+
+<footer>
+  <p><a href="../index.html" style="color:inherit;text-decoration:none;">← Hung-Yu Lin</a> &nbsp;·&nbsp; Designed &amp; Built by Hung-Yu Lin &copy; 2026</p>
+</footer>
+
+</body>
+</html>

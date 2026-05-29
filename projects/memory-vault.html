@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MemoryVault AI — Hung-Yu Lin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-text: #111111;
+      --color-muted: #6b7280;
+      --color-accent: #2563eb;
+      --color-accent-hover: #1d4ed8;
+      --color-surface: #f4f4f5;
+      --color-border: #e5e7eb;
+      --color-green: #16a34a;
+      --color-green-bg: #f0fdf4;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --max-w: 1000px;
+      --nav-h: 64px;
+      --r: 6px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--color-bg); color: var(--color-text); line-height: 1.6; font-size: 16px; }
+
+    /* Nav */
+    nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--color-border); z-index: 100; }
+    .nav-inner { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; height: 100%; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-weight: 600; font-size: 15px; color: var(--color-text); text-decoration: none; letter-spacing: -0.01em; }
+    .nav-back { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: var(--color-muted); text-decoration: none; transition: color 0.15s; }
+    .nav-back:hover { color: var(--color-text); }
+
+    /* Page */
+    main { padding-top: var(--nav-h); }
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 64px 24px 80px; }
+
+    /* Header */
+    .project-header { margin-bottom: 48px; }
+    .project-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-accent); margin-bottom: 12px; }
+    .project-title { font-size: clamp(28px, 4vw, 48px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
+    .project-tagline { font-size: 18px; font-weight: 300; color: var(--color-muted); line-height: 1.6; max-width: 680px; margin-bottom: 20px; }
+    .project-header-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+    .badge { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 4px; padding: 4px 10px; font-size: 13px; font-weight: 500; }
+
+    /* Demo gallery */
+    .demo-section { margin-bottom: 20px; }
+    .demo-section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-bottom: 10px; }
+    .demo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .demo-card { border: 1px solid var(--color-border); border-radius: 10px; overflow: hidden; background: var(--color-surface); }
+    .demo-media { aspect-ratio: 16/9; overflow: hidden; }
+    .demo-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .demo-caption { padding: 8px 12px; font-size: 12px; font-weight: 500; color: var(--color-muted); text-align: center; border-top: 1px solid var(--color-border); }
+
+    /* UI screenshots */
+    .ui-section { margin-bottom: 56px; }
+    .ui-rows { display: flex; flex-direction: column; gap: 10px; }
+    .ui-row-wide { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .ui-row-tall { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .ui-card { border: 1px solid var(--color-border); border-radius: 10px; overflow: hidden; background: var(--color-surface); }
+    .ui-media-wide { aspect-ratio: 5/2; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .ui-media-qa   { aspect-ratio: 5/3; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .ui-media-tall { aspect-ratio: 3/4; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .ui-media-wide img, .ui-media-qa img, .ui-media-tall img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .ui-caption { padding: 8px 12px; font-size: 12px; font-weight: 500; color: var(--color-muted); text-align: center; border-top: 1px solid var(--color-border); }
+
+    /* Content */
+    .content-grid { display: grid; grid-template-columns: 1fr 280px; gap: 48px; align-items: start; }
+    .section-heading { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-bottom: 16px; }
+
+    /* Overview */
+    .overview-text { font-size: 16px; color: var(--color-muted); line-height: 1.8; margin-bottom: 40px; }
+    .overview-text p + p { margin-top: 14px; }
+    .overview-text strong { color: var(--color-text); font-weight: 500; }
+
+    /* Features */
+    .features { margin-bottom: 40px; }
+    .feature-list { display: flex; flex-direction: column; gap: 20px; }
+    .feature-item { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; }
+    .feature-icon { width: 36px; height: 36px; background: #eff6ff; border-radius: var(--r); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .feature-icon svg { color: var(--color-accent); }
+    .feature-icon.green { background: var(--color-green-bg); }
+    .feature-icon.green svg { color: var(--color-green); }
+    .feature-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .feature-desc { font-size: 14px; color: var(--color-muted); line-height: 1.65; }
+
+    /* Guardian Pipeline */
+    .pipeline { margin-bottom: 40px; }
+    .pipeline-steps { display: flex; flex-direction: column; gap: 0; }
+    .pipeline-step { display: grid; grid-template-columns: 32px 1fr; gap: 16px; align-items: start; padding: 16px 0; border-bottom: 1px solid var(--color-border); }
+    .pipeline-step:last-child { border-bottom: none; }
+    .step-num { width: 28px; height: 28px; background: var(--color-accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .step-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .step-desc { font-size: 13px; color: var(--color-muted); line-height: 1.55; }
+
+    /* Privacy levels */
+    .privacy-levels { margin-bottom: 40px; }
+    .privacy-grid { display: flex; flex-direction: column; gap: 8px; }
+    .privacy-row { display: grid; grid-template-columns: 120px 1fr; gap: 12px; align-items: center; padding: 10px 14px; border-radius: var(--r); background: var(--color-surface); border: 1px solid var(--color-border); }
+    .privacy-badge { font-size: 11px; font-weight: 700; letter-spacing: 0.05em; padding: 3px 8px; border-radius: 3px; text-align: center; }
+    .privacy-badge.public  { background: #dcfce7; color: #15803d; }
+    .privacy-badge.low     { background: #fef9c3; color: #854d0e; }
+    .privacy-badge.private { background: #fef3c7; color: #92400e; }
+    .privacy-badge.high    { background: #fee2e2; color: #b91c1c; }
+    .privacy-badge.secret  { background: #111; color: #fff; }
+    .privacy-desc { font-size: 13px; color: var(--color-muted); line-height: 1.5; }
+
+    /* Sidebar */
+    .sidebar { position: sticky; top: calc(var(--nav-h) + 24px); }
+    .sidebar-card { border: 1px solid var(--color-border); border-radius: var(--r); padding: 20px; margin-bottom: 16px; }
+    .sidebar-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-bottom: 12px; }
+    .tech-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+    .tech-tag { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 4px; padding: 3px 9px; font-size: 12px; font-weight: 500; }
+    .sidebar-links { display: flex; flex-direction: column; gap: 10px; }
+    .sidebar-link { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid var(--color-border); border-radius: var(--r); font-size: 14px; font-weight: 500; text-decoration: none; color: var(--color-text); transition: all 0.15s; }
+    .sidebar-link:hover { border-color: var(--color-accent); color: var(--color-accent); background: #eff6ff; }
+    .sidebar-link.primary { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+    .sidebar-link.primary:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); }
+    .sidebar-meta { display: flex; flex-direction: column; gap: 12px; }
+    .sidebar-meta-row { display: flex; flex-direction: column; gap: 2px; }
+    .sidebar-meta-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-muted); }
+    .sidebar-meta-value { font-size: 13px; font-weight: 500; }
+
+    /* Lang bar */
+    .lang-bar { display: flex; height: 6px; border-radius: 3px; overflow: hidden; margin-bottom: 10px; }
+    .lang-bar-seg { height: 100%; }
+    .lang-legend { display: flex; flex-direction: column; gap: 5px; }
+    .lang-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-muted); }
+    .lang-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--color-border); padding: 24px; text-align: center; }
+    footer p { font-size: 13px; color: var(--color-muted); }
+    :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+
+    @media (prefers-color-scheme: dark) {
+      :root { --color-bg: #0f0f0f; --color-text: #f0f0f0; --color-muted: #9ca3af; --color-surface: #1c1c1c; --color-border: #2a2a2a; --color-green-bg: #052e16; }
+      nav { background: rgba(15,15,15,0.92); }
+      .feature-icon { background: #1e3a5f; }
+    }
+    @media (max-width: 768px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .demo-grid { grid-template-columns: 1fr; }
+      .ui-row-wide, .ui-row-tall { grid-template-columns: 1fr; }
+      .privacy-row { grid-template-columns: 100px 1fr; }
+      .container { padding: 40px 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav aria-label="Primary">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">HL</a>
+    <a href="../index.html#projects" class="nav-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to Projects
+    </a>
+  </div>
+</nav>
+
+<main>
+  <div class="container">
+
+    <!-- Header -->
+    <header class="project-header">
+      <p class="project-label">macOS · Privacy-first · Local AI</p>
+      <h1 class="project-title">MemoryVault AI</h1>
+      <p class="project-tagline">AI-powered personal knowledge vault that turns photos, PDFs, audio, and documents into a privately searchable, source-backed Q&amp;A system — with a 7-step Guardian Pipeline that ensures sensitive data never reaches the cloud.</p>
+      <div class="project-header-meta">
+        <span class="badge">Python</span>
+        <span class="badge">FastAPI</span>
+        <span class="badge">Ollama</span>
+        <span class="badge">OpenAI GPT-4o</span>
+        <span class="badge">BGE-M3</span>
+        <span class="badge">SQLite</span>
+        <span class="badge">macOS</span>
+        <span class="badge">LLM</span>
+        <span class="badge">RAG</span>
+        <span class="badge">Local-First</span>
+        <span class="badge">OCR</span>
+        <span class="badge">Semantic Search</span>
+      </div>
+    </header>
+
+    <!-- Live Demo GIFs -->
+    <section class="demo-section" aria-label="Live demos">
+      <p class="demo-section-label">Live Demos</p>
+      <div class="demo-grid">
+        <div class="demo-card">
+          <div class="demo-media">
+            <img src="../media/MemoryVault-AI_ask_resume.gif" alt="Asking about resume job opportunities">
+          </div>
+          <p class="demo-caption">Resume Q&amp;A</p>
+        </div>
+        <div class="demo-card">
+          <div class="demo-media">
+            <img src="../media/MemoryVault-AI_ask_bank.gif" alt="Privacy-guarded bank password query">
+          </div>
+          <p class="demo-caption">Privacy Guard</p>
+        </div>
+        <div class="demo-card">
+          <div class="demo-media">
+            <img src="../media/MemoryVault-AI_upload_file.gif" alt="Quick actions and file upload flow">
+          </div>
+          <p class="demo-caption">Quick Actions &amp; File Import</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- UI Screenshots -->
+    <section class="ui-section" aria-label="App interface screenshots">
+      <p class="demo-section-label">Interface</p>
+      <div class="ui-rows">
+        <div class="ui-row-wide">
+          <div class="ui-card">
+            <div class="ui-media-wide">
+              <img src="../media/MemoryVault-AI_Home.png" alt="Ask bar with Recent, Summary, Ideas quick actions">
+            </div>
+            <p class="ui-caption">Ask Bar &amp; Quick Actions</p>
+          </div>
+          <div class="ui-card">
+            <div class="ui-media-qa">
+              <img src="../media/MemoryVault-AI_Ask_gamil.png" alt="Q&A answer with source attribution and privacy labels">
+            </div>
+            <p class="ui-caption">Q&amp;A with Source Labels</p>
+          </div>
+        </div>
+        <div class="ui-row-tall">
+          <div class="ui-card">
+            <div class="ui-media-tall">
+              <img src="../media/MemoryVault-AI_Settings.png" alt="Settings panel showing model status and privacy toggles">
+            </div>
+            <p class="ui-caption">Settings</p>
+          </div>
+          <div class="ui-card">
+            <div class="ui-media-tall">
+              <img src="../media/MemoryVault-AI_Vault.png" alt="Knowledge Vault file browser with folder tabs">
+            </div>
+            <p class="ui-caption">Knowledge Vault</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content + Sidebar -->
+    <div class="content-grid">
+      <div>
+
+        <!-- Overview -->
+        <section aria-label="Overview">
+          <p class="section-heading">Overview</p>
+          <div class="overview-text">
+            <p>
+              MemoryVault AI is a <strong>native macOS application</strong> that acts as a personal knowledge base.
+              Users import files — photos, PDFs, Word docs, code, screenshots — and the system parses, classifies,
+              and embeds them into a local vector store. From there, users can ask questions in natural language
+              and receive <strong>source-backed answers</strong> with citations linked to the exact document chunks.
+            </p>
+            <p>
+              The core design principle is <strong>privacy-first</strong>. All vault data lives on the user's machine.
+              A local Ollama model (<code>qwen2.5:7b</code>) handles sensitive queries entirely on-device.
+              Cloud LLMs (GPT-4o) are only reached after a 7-step <strong>Guardian Pipeline</strong> strips PII
+              and confirms the query is safe to transmit.
+            </p>
+            <p>
+              The interface is a floating <strong>Spotlight-style Ask bar</strong> built with pywebview — lightweight,
+              always accessible, and out of the way when idle. When not typing, it surfaces contextual quick-action
+              chips: <strong>Recent</strong> (last queries), <strong>Summary</strong> (digest the latest vault additions),
+              and <strong>Ideas</strong> (suggested questions based on vault contents).
+            </p>
+            <p>
+              Every answer surfaces a <strong>Sources panel</strong> listing each document chunk used, tagged with its
+              privacy classification badge — so users can see at a glance whether a result came from a public document
+              or a private file. The <strong>Settings panel</strong> shows live model status (Guardian local and Expert
+              cloud) alongside vault stats (files indexed, total chunks) and per-session privacy toggles. Files can
+              also be added from a phone by scanning a QR code that opens a mobile upload page on the local network.
+            </p>
+          </div>
+        </section>
+
+        <!-- Key Features -->
+        <section class="features" aria-label="Key features">
+          <p class="section-heading">Key Features</p>
+          <div class="feature-list">
+            <div class="feature-item">
+              <div class="feature-icon green" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Guardian Pipeline — 7-Step Privacy Filter</p>
+                <p class="feature-desc">Every query passes through a local AI model that retrieves, classifies, sanitizes, and routes the request. Sensitive data is redacted before anything touches the cloud. Cloud responses are scanned for leakage before being shown to the user.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Local Vector Search with BGE-M3</p>
+                <p class="feature-desc">Documents are embedded using BGE-M3 multilingual embeddings (via sentence-transformers) stored in sqlite-vec. Vectors are loaded at startup — no first-query lag. Semantic search finds the most relevant chunks across the entire vault, in any language, without external API calls.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Multi-format Document Import</p>
+                <p class="feature-desc">Supports PDF, RTF, plain text, source code, images (JPG, PNG, HEIC via Tesseract OCR), and audio files. Parsed by pypdf, striprtf, and Pillow — each file chunked and indexed into the vault automatically.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Source-backed Q&amp;A with Privacy Labels</p>
+                <p class="feature-desc">Every answer surfaces a Sources panel showing each document chunk used — tagged with its privacy classification badge (Public / Private / Secret). Users see exactly which file answered their question and how sensitive that source is.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Contextual Quick Actions</p>
+                <p class="feature-desc">When idle, the Ask bar suggests three smart actions — Recent (replay last queries), Summary (digest new vault additions), and Ideas (auto-generated questions from vault contents) — reducing friction for everyday use.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Folder Organisation</p>
+                <p class="feature-desc">Files are grouped into named folders inside the vault drawer. Tabs let users filter by folder (General, Work Projects, etc.), keeping the knowledge base structured as it grows.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Tavily Web Search</p>
+                <p class="feature-desc">Public queries can be augmented with live web results via Tavily. The Guardian Pipeline ensures only sanitized, non-sensitive queries reach the web — private content never triggers an external search.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Mobile Upload via QR Code</p>
+                <p class="feature-desc">Scanning a QR code opens a mobile-optimized upload page served on the local network. Files from a phone land directly in the vault — no cloud sync, no cables.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Guardian Pipeline -->
+        <section class="pipeline" aria-label="Guardian Pipeline">
+          <p class="section-heading">Guardian Pipeline</p>
+          <div class="pipeline-steps">
+            <div class="pipeline-step">
+              <div class="step-num">1</div>
+              <div><p class="step-title">Retrieve</p><p class="step-desc">Semantic search over the local vault to fetch the most relevant document chunks for the query.</p></div>
+            </div>
+            <div class="pipeline-step">
+              <div class="step-num">2</div>
+              <div><p class="step-title">Classify</p><p class="step-desc">The local LLM scores the privacy level of the query and each retrieved chunk (PUBLIC → SECRET).</p></div>
+            </div>
+            <div class="pipeline-step">
+              <div class="step-num">3</div>
+              <div><p class="step-title">Route</p><p class="step-desc">Based on classification, the query is routed: LOCAL (on-device only), GUARDED-ONLINE (sanitized + cloud), or BLOCKED.</p></div>
+            </div>
+            <div class="pipeline-step">
+              <div class="step-num">4</div>
+              <div><p class="step-title">Sanitize</p><p class="step-desc">PII and sensitive identifiers are redacted from the payload before any data leaves the machine.</p></div>
+            </div>
+            <div class="pipeline-step">
+              <div class="step-num">5</div>
+              <div><p class="step-title">Expert</p><p class="step-desc">The sanitized query is sent to OpenAI GPT-4o for cloud-augmented answers — only for PUBLIC or LOW_SENSITIVE queries.</p></div>
+            </div>
+            <div class="pipeline-step">
+              <div class="step-num">6</div>
+              <div><p class="step-title">Check</p><p class="step-desc">The cloud response is scanned for any data leakage or unintended re-identification before being used.</p></div>
+            </div>
+            <div class="pipeline-step">
+              <div class="step-num">7</div>
+              <div><p class="step-title">Finalize</p><p class="step-desc">Local context and cloud answer are merged into a single cited response returned to the user.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Privacy Levels -->
+        <section class="privacy-levels" aria-label="Privacy classification levels">
+          <p class="section-heading">Privacy Classification Levels</p>
+          <div class="privacy-grid">
+            <div class="privacy-row">
+              <span class="privacy-badge public">PUBLIC</span>
+              <span class="privacy-desc">Sent to cloud freely — no sanitization needed.</span>
+            </div>
+            <div class="privacy-row">
+              <span class="privacy-badge low">LOW SENSITIVE</span>
+              <span class="privacy-desc">Light sanitization applied before cloud transmission.</span>
+            </div>
+            <div class="privacy-row">
+              <span class="privacy-badge private">PRIVATE</span>
+              <span class="privacy-desc">Answered on-device only; declined if cloud is required.</span>
+            </div>
+            <div class="privacy-row">
+              <span class="privacy-badge high">HIGHLY PRIVATE</span>
+              <span class="privacy-desc">Requires explicit user approval before going online.</span>
+            </div>
+            <div class="privacy-row">
+              <span class="privacy-badge secret">SECRET</span>
+              <span class="privacy-desc">Never leaves the device under any circumstances.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Roadmap -->
+        <section aria-label="Roadmap" style="margin-bottom:40px;">
+          <p class="section-heading">Roadmap</p>
+          <div class="privacy-grid">
+            <div class="privacy-row" style="grid-template-columns:1fr;">
+              <span class="privacy-desc">☐ &nbsp;Local-only mode — fully air-gapped, no OpenAI required</span>
+            </div>
+            <div class="privacy-row" style="grid-template-columns:1fr;">
+              <span class="privacy-desc">☐ &nbsp;Support for additional Guardian models (Mistral, LLaMA 3)</span>
+            </div>
+            <div class="privacy-row" style="grid-template-columns:1fr;">
+              <span class="privacy-desc">☐ &nbsp;Browser extension for clipping web pages into the vault</span>
+            </div>
+            <div class="privacy-row" style="grid-template-columns:1fr;">
+              <span class="privacy-desc">☐ &nbsp;Windows / Linux support</span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar" aria-label="Project details">
+        <div class="sidebar-card">
+          <p class="sidebar-label">Links</p>
+          <div class="sidebar-links">
+            <a href="https://github.com/RookiedRED/MemoryVault-AI" class="sidebar-link primary" target="_blank" rel="noopener noreferrer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+              View on GitHub
+            </a>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <p class="sidebar-label">Tech Stack</p>
+          <div class="tech-tags">
+            <span class="tech-tag">Python 3.12</span>
+            <span class="tech-tag">FastAPI</span>
+            <span class="tech-tag">Ollama</span>
+            <span class="tech-tag">GPT-4o</span>
+            <span class="tech-tag">BGE-M3</span>
+            <span class="tech-tag">sentence-transformers</span>
+            <span class="tech-tag">sqlite-vec</span>
+            <span class="tech-tag">Tesseract OCR</span>
+            <span class="tech-tag">pypdf</span>
+            <span class="tech-tag">Pillow</span>
+            <span class="tech-tag">pywebview</span>
+            <span class="tech-tag">PyInstaller</span>
+            <span class="tech-tag">Tavily</span>
+            <span class="tech-tag">SQLite</span>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <p class="sidebar-label">Details</p>
+          <div class="sidebar-meta">
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Platform</span>
+              <span class="sidebar-meta-value">macOS 13 Ventura+</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Runtime</span>
+              <span class="sidebar-meta-value">Python 3.12+</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Architecture</span>
+              <span class="sidebar-meta-value">Local-first</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Guardian Model</span>
+              <span class="sidebar-meta-value">Ollama qwen2.5:7b (local)</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Expert Model</span>
+              <span class="sidebar-meta-value">OpenAI GPT-4o (cloud)</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Privacy Controls</span>
+              <span class="sidebar-meta-value">Guarded online toggle · Audit log</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">License</span>
+              <span class="sidebar-meta-value">MIT</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <p class="sidebar-label">Languages</p>
+          <div class="lang-bar" aria-hidden="true">
+            <div class="lang-bar-seg" style="width:64.6%;background:#3b82f6;"></div>
+            <div class="lang-bar-seg" style="width:13.4%;background:#f59e0b;"></div>
+            <div class="lang-bar-seg" style="width:12.3%;background:#ef4444;"></div>
+            <div class="lang-bar-seg" style="width:9.7%;background:#8b5cf6;"></div>
+          </div>
+          <div class="lang-legend">
+            <div class="lang-item"><span class="lang-dot" style="background:#3b82f6;"></span>Python 64.6%</div>
+            <div class="lang-item"><span class="lang-dot" style="background:#f59e0b;"></span>JavaScript 13.4%</div>
+            <div class="lang-item"><span class="lang-dot" style="background:#ef4444;"></span>HTML 12.3%</div>
+            <div class="lang-item"><span class="lang-dot" style="background:#8b5cf6;"></span>CSS 9.7%</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <p><a href="../index.html" style="color:inherit;text-decoration:none;">← Hung-Yu Lin</a> &nbsp;·&nbsp; Designed &amp; Built by Hung-Yu Lin &copy; 2026</p>
+</footer>
+
+</body>
+</html>

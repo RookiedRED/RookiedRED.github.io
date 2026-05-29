@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AR Navigation System — Hung-Yu Lin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-text: #111111;
+      --color-muted: #6b7280;
+      --color-accent: #2563eb;
+      --color-accent-hover: #1d4ed8;
+      --color-surface: #f4f4f5;
+      --color-border: #e5e7eb;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --max-w: 1000px;
+      --nav-h: 64px;
+      --r: 6px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--color-bg); color: var(--color-text); line-height: 1.6; font-size: 16px; }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--color-border); z-index: 100;
+    }
+    .nav-inner {
+      max-width: var(--max-w); margin: 0 auto; padding: 0 24px; height: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { font-weight: 600; font-size: 15px; color: var(--color-text); text-decoration: none; letter-spacing: -0.01em; }
+    .nav-back { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: var(--color-muted); text-decoration: none; transition: color 0.15s; }
+    .nav-back:hover { color: var(--color-text); }
+    .nav-back svg { flex-shrink: 0; }
+
+    /* Page */
+    main { padding-top: var(--nav-h); }
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 64px 24px; }
+
+    /* Header */
+    .project-header { margin-bottom: 48px; }
+    .project-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-accent); margin-bottom: 12px; }
+    .project-title { font-size: clamp(28px, 4vw, 48px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
+    .project-tagline { font-size: 18px; font-weight: 300; color: var(--color-muted); line-height: 1.6; max-width: 640px; margin-bottom: 20px; }
+    .project-header-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+    .badge { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 4px; padding: 4px 10px; font-size: 13px; font-weight: 500; }
+
+    /* Media showcase */
+    .media-section { margin-bottom: 56px; }
+
+    .demo-hero { border: 1px solid var(--color-border); border-radius: 10px; aspect-ratio: 16/9; overflow: hidden; margin-bottom: 10px; background: #0a0a0a; }
+    .demo-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .screenshot-wide { border: 1px solid var(--color-border); border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+    .screenshot-wide-media { aspect-ratio: 16/7; overflow: hidden; }
+    .screenshot-wide-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .screenshot-caption { padding: 8px 14px; font-size: 12px; font-weight: 500; color: var(--color-muted); border-top: 1px solid var(--color-border); background: var(--color-surface); }
+
+    .screenshots-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .screenshot-slot { border: 1px solid var(--color-border); border-radius: var(--r); overflow: hidden; background: var(--color-surface); }
+    .screenshot-slot-media { aspect-ratio: 16/9; overflow: hidden; }
+    .screenshot-slot-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .screenshot-slot span { display: block; padding: 7px 10px; font-size: 11px; font-weight: 500; color: var(--color-muted); text-align: center; border-top: 1px solid var(--color-border); }
+
+    /* Content grid */
+    .content-grid { display: grid; grid-template-columns: 1fr 280px; gap: 48px; align-items: start; }
+
+    /* Overview */
+    .section-heading { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-bottom: 16px; }
+    .overview-text { font-size: 16px; color: var(--color-muted); line-height: 1.8; margin-bottom: 32px; }
+    .overview-text p + p { margin-top: 14px; }
+    .overview-text strong { color: var(--color-text); font-weight: 500; }
+
+    /* Features */
+    .features { margin-bottom: 40px; }
+    .feature-list { display: flex; flex-direction: column; gap: 20px; }
+    .feature-item { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; }
+    .feature-icon { width: 36px; height: 36px; background: #eff6ff; border-radius: var(--r); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .feature-icon svg { color: var(--color-accent); }
+    .feature-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .feature-desc { font-size: 14px; color: var(--color-muted); line-height: 1.65; }
+
+    /* Sidebar */
+    .sidebar { position: sticky; top: calc(var(--nav-h) + 24px); }
+    .sidebar-card { border: 1px solid var(--color-border); border-radius: var(--r); padding: 20px; margin-bottom: 16px; }
+    .sidebar-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-bottom: 12px; }
+    .tech-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+    .tech-tag { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 4px; padding: 3px 9px; font-size: 12px; font-weight: 500; }
+    .sidebar-links { display: flex; flex-direction: column; gap: 10px; }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      border: 1px solid var(--color-border); border-radius: var(--r);
+      font-size: 14px; font-weight: 500; text-decoration: none; color: var(--color-text);
+      transition: all 0.15s;
+    }
+    .sidebar-link:hover { border-color: var(--color-accent); color: var(--color-accent); background: #eff6ff; }
+    .sidebar-link.primary { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+    .sidebar-link.primary:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); }
+    .sidebar-meta { display: flex; flex-direction: column; gap: 12px; }
+    .sidebar-meta-row { display: flex; flex-direction: column; gap: 2px; }
+    .sidebar-meta-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-muted); }
+    .sidebar-meta-value { font-size: 13px; font-weight: 500; }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--color-border); padding: 24px; text-align: center; margin-top: 80px; }
+    footer p { font-size: 13px; color: var(--color-muted); }
+
+    :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+
+    @media (prefers-color-scheme: dark) {
+      :root { --color-bg: #0f0f0f; --color-text: #f0f0f0; --color-muted: #9ca3af; --color-surface: #1c1c1c; --color-border: #2a2a2a; }
+      nav { background: rgba(15,15,15,0.92); }
+      .feature-icon { background: #1e3a5f; }
+    }
+
+    @media (max-width: 768px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .screenshots-strip { grid-template-columns: repeat(3, 1fr); }
+      .container { padding: 40px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav aria-label="Primary">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">HL</a>
+    <a href="../index.html#projects" class="nav-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to Projects
+    </a>
+  </div>
+</nav>
+
+<main>
+  <div class="container">
+
+    <!-- Header -->
+    <header class="project-header">
+      <p class="project-label">iOS · ARKit · Machine Learning</p>
+      <h1 class="project-title">AR Navigation System</h1>
+      <p class="project-tagline">On-device edge ML for real-time object localization, persistent spatial landmark storage, and A* pathfinding over AR-reconstructed environments — no backend required.</p>
+      <div class="project-header-meta">
+        <span class="badge">iOS</span>
+        <span class="badge">ARKit</span>
+        <span class="badge">CoreML</span>
+        <span class="badge">ONNX Runtime</span>
+        <span class="badge">A* Algorithm</span>
+        <span class="badge">On-device ML</span>
+      </div>
+    </header>
+
+    <!-- Media showcase -->
+    <section class="media-section" aria-label="Project media">
+
+      <!-- Main demo GIF -->
+      <div class="demo-hero">
+        <img src="../media/Inception_demo.gif" alt="Inception AR Navigation live demo">
+      </div>
+
+      <!-- Wide detection screenshot -->
+      <div class="screenshot-wide">
+        <div class="screenshot-wide-media">
+          <img src="../media/Inception_detection.PNG" alt="Real-time object detection — laptop 0.7m, TV 0.9m, keyboard 0.6m at 42.4ms">
+        </div>
+        <p class="screenshot-caption">Real-time Object Detection — 42.4 ms on-device inference · 4 objects with distance labels</p>
+      </div>
+
+      <!-- 3-column strip -->
+      <div class="screenshots-strip">
+        <div class="screenshot-slot">
+          <div class="screenshot-slot-media">
+            <img src="../media/Inception_main_view.PNG" alt="A* navigation route on AR point-cloud mesh">
+          </div>
+          <span>A* Navigation Route</span>
+        </div>
+        <div class="screenshot-slot">
+          <div class="screenshot-slot-media">
+            <img src="../media/Inception_navigation.PNG" alt="Navigate to destination prompt on AR mesh">
+          </div>
+          <span>Destination Selection</span>
+        </div>
+        <div class="screenshot-slot">
+          <div class="screenshot-slot-media">
+            <img src="../media/Inception_minimap.PNG" alt="Top-down spatial minimap of scanned room">
+          </div>
+          <span>Spatial Minimap</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Main content + Sidebar -->
+    <div class="content-grid">
+      <div>
+        <!-- Overview -->
+        <section class="overview" aria-label="Overview">
+          <p class="section-heading">Overview</p>
+          <div class="overview-text">
+            <p>
+              AR Navigation System is a <strong>fully on-device</strong> mobile application that combines
+              real-time object detection, spatial landmark persistence, and AR-based pathfinding — all
+              running locally without any server dependency.
+            </p>
+            <p>
+              The system runs object detection through <strong>CoreML</strong> and <strong>ONNX Runtime</strong>,
+              achieving zero-latency inference by eliminating network round-trips. Detected objects are stored
+              as labeled landmarks in a persistent spatial map, so users can save, retrieve, and navigate back
+              to previously seen objects across multiple sessions.
+            </p>
+            <p>
+              Navigation is powered by <strong>A* pathfinding</strong> computed over the AR mesh that ARKit
+              reconstructs from the physical environment. Routes update dynamically as the environment changes,
+              keeping navigation stable in real-world conditions.
+            </p>
+          </div>
+        </section>
+
+        <!-- Key Features -->
+        <section class="features" aria-label="Key features">
+          <p class="section-heading">Key Features</p>
+          <div class="feature-list">
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Zero-latency On-device Inference</p>
+                <p class="feature-desc">Object detection runs entirely on the device via CoreML and ONNX Runtime, achieving ~42ms per frame in real-world testing. No network request, no server — fully offline.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Persistent Spatial Landmark Storage</p>
+                <p class="feature-desc">Detected objects are stored as labeled landmarks in a spatial map. Users can save, retrieve, and navigate back to previously detected objects across sessions — even after closing and reopening the app.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">A* Pathfinding on AR Mesh</p>
+                <p class="feature-desc">Navigation routes are computed with A* over the mesh geometry that ARKit reconstructs from the real environment. The algorithm adapts to the physical layout of the space rather than relying on a fixed map.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Dynamic Route Updates</p>
+                <p class="feature-desc">Routes recalculate in real time as the AR mesh updates, keeping navigation stable as the user moves through changing environments.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar" aria-label="Project details">
+        <div class="sidebar-card">
+          <p class="sidebar-label">Links</p>
+          <div class="sidebar-links">
+            <a href="https://github.com/RookiedRED" class="sidebar-link primary" target="_blank" rel="noopener noreferrer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+              View on GitHub
+            </a>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <p class="sidebar-label">Tech Stack</p>
+          <div class="tech-tags">
+            <span class="tech-tag">iOS (Swift)</span>
+            <span class="tech-tag">ARKit</span>
+            <span class="tech-tag">CoreML</span>
+            <span class="tech-tag">ONNX Runtime</span>
+            <span class="tech-tag">A* Algorithm</span>
+            <span class="tech-tag">SceneKit</span>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <p class="sidebar-label">Details</p>
+          <div class="sidebar-meta">
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Platform</span>
+              <span class="sidebar-meta-value">iOS</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Type</span>
+              <span class="sidebar-meta-value">Personal Project</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Inference</span>
+              <span class="sidebar-meta-value">100% On-device</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <p><a href="../index.html" style="color: inherit; text-decoration: none;">← Hung-Yu Lin</a> &nbsp;·&nbsp; Designed &amp; Built by Hung-Yu Lin &copy; 2026</p>
+</footer>
+
+</body>
+</html>
