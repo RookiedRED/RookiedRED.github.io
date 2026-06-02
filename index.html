@@ -48,7 +48,8 @@
       max-width: var(--max-w); margin: 0 auto; padding: 0 24px; height: 100%;
       display: flex; align-items: center; justify-content: space-between;
     }
-    .nav-logo { font-weight: 700; font-size: 15px; color: var(--text); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-logo { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; text-decoration: none; }
+    .nav-logo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; image-rendering: pixelated; }
     .nav-links { display: flex; gap: 28px; list-style: none; }
     .nav-links a { font-size: 13px; font-weight: 500; color: var(--muted); text-decoration: none; transition: color 0.15s; }
     .nav-links a:hover, .nav-links a.active { color: var(--text); }
@@ -364,7 +365,9 @@
 
 <nav aria-label="Primary">
   <div class="nav-inner">
-    <a href="#hero" class="nav-logo">HL</a>
+    <a href="#hero" class="nav-logo" aria-label="Back to top">
+      <img src="media/profiles/pixel_profile_icon.png" alt="Hung-Yu Lin pixel icon">
+    </a>
     <ul class="nav-links" id="nav-links" role="list">
       <li><a href="#about">About</a></li>
       <li><a href="#skills">Skills</a></li>
