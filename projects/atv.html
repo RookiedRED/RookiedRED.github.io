@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autonomous Robot Car — Hung-Yu Lin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-text: #111111;
+      --color-muted: #6b7280;
+      --color-accent: #2563eb;
+      --color-accent-hover: #1d4ed8;
+      --color-surface: #f4f4f5;
+      --color-border: #e5e7eb;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --max-w: 1000px;
+      --nav-h: 64px;
+      --r: 6px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--color-bg); color: var(--color-text); line-height: 1.6; font-size: 16px; }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--color-border); z-index: 100;
+    }
+    .nav-inner {
+      max-width: var(--max-w); margin: 0 auto; padding: 0 24px; height: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { font-weight: 600; font-size: 15px; color: var(--color-text); text-decoration: none; letter-spacing: -0.01em; }
+    .nav-back { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: var(--color-muted); text-decoration: none; transition: color 0.15s; }
+    .nav-back:hover { color: var(--color-text); }
+    .nav-back svg { flex-shrink: 0; }
+
+    /* Page */
+    main { padding-top: var(--nav-h); }
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 64px 24px; }
+
+    /* Header */
+    .project-header { margin-bottom: 48px; }
+    .project-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-accent); margin-bottom: 12px; }
+    .project-title { font-size: clamp(28px, 4vw, 48px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
+    .project-tagline { font-size: 18px; font-weight: 300; color: var(--color-muted); line-height: 1.6; max-width: 640px; margin-bottom: 20px; }
+    .project-header-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+    .badge { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 4px; padding: 4px 10px; font-size: 13px; font-weight: 500; }
+
+    /* Media showcase */
+    .media-section { margin-bottom: 56px; }
+
+    .demo-hero { border: 1px solid var(--color-border); border-radius: 10px; aspect-ratio: 16/9; overflow: hidden; margin-bottom: 10px; background: #0a0a0a; }
+    .demo-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .screenshot-wide { border: 1px solid var(--color-border); border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+    .screenshot-wide-media { aspect-ratio: 16/7; overflow: hidden; }
+    .screenshot-wide-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .screenshot-caption { padding: 8px 14px; font-size: 12px; font-weight: 500; color: var(--color-muted); border-top: 1px solid var(--color-border); background: var(--color-surface); }
+
+    .screenshots-strip { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .screenshot-slot { border: 1px solid var(--color-border); border-radius: var(--r); overflow: hidden; background: var(--color-surface); }
+    .screenshot-slot-media { aspect-ratio: 16/9; overflow: hidden; }
+    .screenshot-slot-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .screenshot-slot span { display: block; padding: 7px 10px; font-size: 11px; font-weight: 500; color: var(--color-muted); text-align: center; border-top: 1px solid var(--color-border); }
+
+    /* Content grid */
+    .content-grid { display: grid; grid-template-columns: 1fr 280px; gap: 48px; align-items: start; }
+
+    /* Overview */
+    .section-heading { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-bottom: 16px; }
+    .overview-text { font-size: 16px; color: var(--color-muted); line-height: 1.8; margin-bottom: 32px; }
+    .overview-text p + p { margin-top: 14px; }
+    .overview-text strong { color: var(--color-text); font-weight: 500; }
+
+    /* Features */
+    .features { margin-bottom: 40px; }
+    .feature-list { display: flex; flex-direction: column; gap: 20px; }
+    .feature-item { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; }
+    .feature-icon { width: 36px; height: 36px; background: #eff6ff; border-radius: var(--r); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .feature-icon svg { color: var(--color-accent); }
+    .feature-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .feature-desc { font-size: 14px; color: var(--color-muted); line-height: 1.65; }
+
+    /* State machine */
+    .state-machine { margin-bottom: 40px; }
+    .state-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .state-chip { display: flex; align-items: center; gap: 7px; padding: 7px 13px; border: 1px solid var(--color-border); border-radius: 20px; font-size: 13px; font-weight: 500; }
+    .state-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .state-dot.green { background: #22c55e; }
+    .state-dot.yellow { background: #eab308; }
+    .state-dot.orange { background: #f97316; }
+    .state-dot.red { background: #ef4444; }
+    .state-dot.purple { background: #a855f7; }
+
+    /* Sidebar */
+    .sidebar { position: sticky; top: calc(var(--nav-h) + 24px); }
+    .sidebar-card { border: 1px solid var(--color-border); border-radius: var(--r); padding: 20px; margin-bottom: 16px; }
+    .sidebar-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-bottom: 12px; }
+    .tech-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+    .tech-tag { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 4px; padding: 3px 9px; font-size: 12px; font-weight: 500; }
+    .sidebar-links { display: flex; flex-direction: column; gap: 10px; }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      border: 1px solid var(--color-border); border-radius: var(--r);
+      font-size: 14px; font-weight: 500; text-decoration: none; color: var(--color-text);
+      transition: all 0.15s;
+    }
+    .sidebar-link:hover { border-color: var(--color-accent); color: var(--color-accent); background: #eff6ff; }
+    .sidebar-link.primary { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+    .sidebar-link.primary:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); }
+    .sidebar-meta { display: flex; flex-direction: column; gap: 12px; }
+    .sidebar-meta-row { display: flex; flex-direction: column; gap: 2px; }
+    .sidebar-meta-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-muted); }
+    .sidebar-meta-value { font-size: 13px; font-weight: 500; }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--color-border); padding: 24px; text-align: center; margin-top: 80px; }
+    footer p { font-size: 13px; color: var(--color-muted); }
+
+    :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+
+    @media (prefers-color-scheme: dark) {
+      :root { --color-bg: #0f0f0f; --color-text: #f0f0f0; --color-muted: #9ca3af; --color-surface: #1c1c1c; --color-border: #2a2a2a; }
+      nav { background: rgba(15,15,15,0.92); }
+      .feature-icon { background: #1e3a5f; }
+    }
+
+    @media (max-width: 768px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .screenshots-strip { grid-template-columns: 1fr; }
+      .container { padding: 40px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav aria-label="Primary">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">HL</a>
+    <a href="../index.html#projects" class="nav-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to Projects
+    </a>
+  </div>
+</nav>
+
+<main>
+  <div class="container">
+
+    <!-- Header -->
+    <header class="project-header">
+      <p class="project-label">iOS · Embedded · Machine Learning</p>
+      <h1 class="project-title">Autonomous Robot Car</h1>
+      <p class="project-tagline">iPhone-powered autonomous navigation for a 4-wheel Raspberry Pi robot — on-device YOLO lane detection, DepthAnything depth estimation, and a 5-state navigation state machine, all wirelessly controlled via BLE.</p>
+      <div class="project-header-meta">
+        <span class="badge">iOS (Swift)</span>
+        <span class="badge">CoreML</span>
+        <span class="badge">YOLOv8</span>
+        <span class="badge">DepthAnything V2</span>
+        <span class="badge">Raspberry Pi</span>
+        <span class="badge">BLE</span>
+        <span class="badge">Python</span>
+      </div>
+    </header>
+
+    <!-- Media showcase -->
+    <section class="media-section" aria-label="Project media">
+
+      <!-- Main demo GIF — third-person view -->
+      <div class="demo-hero">
+        <img src="../media/projects/third-person-POV-ATV.gif" alt="Autonomous robot car navigating lane — third-person view">
+      </div>
+
+      <!-- First-person POV with vision overlay -->
+      <div class="screenshot-wide">
+        <div class="screenshot-wide-media">
+          <img src="../media/projects/first-person-POV-ATV.gif" alt="iPhone camera feed showing YOLO lane segmentation and depth overlay at 15 FPS">
+        </div>
+        <p class="screenshot-caption">First-Person Vision Debug Overlay — Lane Segmentation · Depth Estimation · Object Detection Boxes · 15 FPS on-device inference</p>
+      </div>
+
+      <!-- 2-column strip: app UI + hardware -->
+      <div class="screenshots-strip">
+        <div class="screenshot-slot">
+          <div class="screenshot-slot-media">
+            <img src="../media/projects/ATV_UI.PNG" alt="iOS SwiftUI control interface with joystick and speed readout">
+          </div>
+          <span>iOS Control Interface</span>
+        </div>
+        <div class="screenshot-slot">
+          <div class="screenshot-slot-media">
+            <img src="../media/projects/ATV.jpeg" alt="4-wheel Raspberry Pi robot car hardware with L298N motor driver">
+          </div>
+          <span>Hardware Platform</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Main content + Sidebar -->
+    <div class="content-grid">
+      <div>
+        <!-- Overview -->
+        <section class="overview" aria-label="Overview">
+          <p class="section-heading">Overview</p>
+          <div class="overview-text">
+            <p>
+              The Autonomous Robot Car transforms an iPhone into a real-time autonomous navigation controller
+              for a <strong>4-wheel Raspberry Pi robot</strong>. All perception runs on-device using
+              <strong>CoreML</strong> at 15 FPS — no cloud, no server, no external compute.
+            </p>
+            <p>
+              Lane following uses <strong>YOLOv8 segmentation</strong> to identify the walkable area and
+              compute center offset, with a multi-factor boundary repulsion system that applies corrective
+              steering before the vehicle drifts to the edge. Obstacle avoidance layers
+              <strong>DepthAnything V2</strong> depth maps over a YOLO object detector, gating avoidance
+              triggers with depth confirmation to suppress false positives from distant large objects.
+            </p>
+            <p>
+              Drive commands (action, speed 0–100 PWM, steering −100 to +100) are serialized as
+              <strong>JSON and transmitted over Bluetooth Low Energy</strong> to a Python controller on
+              the Raspberry Pi, which drives the wheels through an L298N motor driver.
+            </p>
+          </div>
+        </section>
+
+        <!-- Key Features -->
+        <section class="features" aria-label="Key features">
+          <p class="section-heading">Key Features</p>
+          <div class="feature-list">
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">YOLO Lane Following with Boundary Repulsion</p>
+                <p class="feature-desc">YOLOv8 segmentation identifies the walkable lane area and computes center offset. A proximity-scaled boundary repulsion force pushes the vehicle back when it drifts within 18% of lane edges, providing smooth, continuous correction rather than binary steering.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Depth-Gated Obstacle Avoidance</p>
+                <p class="feature-desc">DepthAnything V2 Small (F16) estimates per-pixel depth across left, center, and right sectors. Object detections are only promoted to avoidance triggers when depth confirmation gates confirm proximity, eliminating false triggers from large distant objects.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">5-State Navigation State Machine</p>
+                <p class="feature-desc">The system cycles through five states: <strong>Cruising</strong> (normal lane following), <strong>Slowing</strong> (obstacle in proximity), <strong>Avoiding</strong> (evasive maneuver with boundary clearance validation), <strong>Recovering</strong> (lane realignment with steer decay), and <strong>Blocked</strong> (no safe path). Extended lane-loss tolerance of 8 frames prevents premature recovery failures.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Manual Override & Vision Debug Overlay</p>
+                <p class="feature-desc">An on-screen joystick provides full manual control with GPS-derived real-time speed display. A comprehensive debug overlay visualizes lane boundaries, depth measurements, and object detection boxes — with an auto-collapsing sidebar to maximize camera visibility during autonomous operation.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">BLE JSON Command Protocol</p>
+                <p class="feature-desc">Drive commands are serialized as JSON over Core Bluetooth and received by a Python script on the Raspberry Pi, which translates them into L298N PWM signals. The protocol carries action type (forward/backward/stop), speed (0–100), and steering angle (−100 to +100) per frame.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Navigation States -->
+        <section class="state-machine" aria-label="Navigation states">
+          <p class="section-heading">Navigation States</p>
+          <div class="state-list">
+            <div class="state-chip"><span class="state-dot green"></span>Cruising</div>
+            <div class="state-chip"><span class="state-dot yellow"></span>Slowing</div>
+            <div class="state-chip"><span class="state-dot orange"></span>Avoiding</div>
+            <div class="state-chip"><span class="state-dot purple"></span>Recovering</div>
+            <div class="state-chip"><span class="state-dot red"></span>Blocked</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar" aria-label="Project details">
+        <div class="sidebar-card">
+          <p class="sidebar-label">Links</p>
+          <div class="sidebar-links">
+            <a href="https://github.com/RookiedRED/autonomous-robot-car" class="sidebar-link primary" target="_blank" rel="noopener noreferrer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+              View on GitHub
+            </a>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <p class="sidebar-label">Tech Stack</p>
+          <div class="tech-tags">
+            <span class="tech-tag">iOS (Swift 5.9)</span>
+            <span class="tech-tag">SwiftUI</span>
+            <span class="tech-tag">CoreML</span>
+            <span class="tech-tag">YOLOv8</span>
+            <span class="tech-tag">DepthAnything V2</span>
+            <span class="tech-tag">Core Bluetooth</span>
+            <span class="tech-tag">Core Location</span>
+            <span class="tech-tag">Raspberry Pi</span>
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">L298N</span>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <p class="sidebar-label">Details</p>
+          <div class="sidebar-meta">
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Platform</span>
+              <span class="sidebar-meta-value">iOS + Embedded</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Type</span>
+              <span class="sidebar-meta-value">Personal Project</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Processing</span>
+              <span class="sidebar-meta-value">15 FPS on-device</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Communication</span>
+              <span class="sidebar-meta-value">BLE (JSON)</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <p><a href="../index.html" style="color: inherit; text-decoration: none;">← Hung-Yu Lin</a> &nbsp;·&nbsp; Designed &amp; Built by Hung-Yu Lin &copy; 2026</p>
+</footer>
+
+</body>
+</html>
