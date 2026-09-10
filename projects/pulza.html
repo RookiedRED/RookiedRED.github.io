@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pulza — Hung-Yu Lin</title>
+  <link rel="icon" type="image/png" href="../media/profiles/pixel_profile_icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Matches the palette in ../index.html so the site reads as one surface. */
+      color-scheme: dark;
+      --color-bg: #080808;
+      --color-text: #efefef;
+      --color-muted: #888888;
+      --color-accent: #2563eb;
+      --color-accent-hover: #1d4ed8;
+      --color-surface: #111111;
+      --color-border: #1e1e1e;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --max-w: 1000px;
+      --nav-h: 60px;
+      --r: 8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--color-bg); color: var(--color-text); line-height: 1.6; font-size: 16px; }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
+      background: rgba(8,8,8,0.88); backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--color-border); z-index: 100;
+    }
+    .nav-inner {
+      max-width: var(--max-w); margin: 0 auto; padding: 0 24px; height: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; text-decoration: none; }
+    .nav-logo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; image-rendering: pixelated; }
+    .nav-back { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: var(--color-muted); text-decoration: none; transition: color 0.15s; }
+    .nav-back:hover { color: var(--color-text); }
+    .nav-back svg { flex-shrink: 0; }
+
+    /* Page */
+    main { padding-top: var(--nav-h); }
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 64px 24px; }
+
+    /* Header */
+    .project-header { margin-bottom: 48px; }
+    .project-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-accent); margin-bottom: 12px; }
+    .project-title-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .app-icon { width: 60px; height: 60px; border-radius: 14px; flex-shrink: 0; display: block; box-shadow: 0 6px 20px rgba(0,0,0,0.5); }
+    .project-title { font-size: clamp(28px, 4vw, 48px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; }
+    .project-tagline { font-size: 18px; font-weight: 300; color: var(--color-muted); line-height: 1.6; max-width: 640px; margin-bottom: 20px; }
+    .project-header-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+    .badge { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 4px; padding: 4px 10px; font-size: 13px; font-weight: 500; }
+    .badge.live { border-color: #2b5c34; background: rgba(34,197,94,0.12); color: #4ade80; }
+
+    /* Media showcase — portrait phone captures, so the slots are tall rather than 16/9 */
+    .media-section { margin-bottom: 56px; }
+    .phone-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .phone-slot { border: 1px solid var(--color-border); border-radius: var(--r); overflow: hidden; background: var(--color-surface); }
+    .phone-slot-media { aspect-ratio: 9 / 19.5; overflow: hidden; background: #0a0a0a; }
+    .phone-slot-media img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+    .phone-slot span { display: block; padding: 8px 10px; font-size: 11px; font-weight: 500; color: var(--color-muted); text-align: center; border-top: 1px solid var(--color-border); }
+
+    /* Content grid */
+    .content-grid { display: grid; grid-template-columns: 1fr 280px; gap: 48px; align-items: start; }
+
+    /* Overview */
+    .section-heading { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-bottom: 16px; }
+    .overview-text { font-size: 16px; color: var(--color-muted); line-height: 1.8; margin-bottom: 32px; }
+    .overview-text p + p { margin-top: 14px; }
+    .overview-text strong { color: var(--color-text); font-weight: 500; }
+
+    /* Features */
+    .features { margin-bottom: 40px; }
+    .feature-list { display: flex; flex-direction: column; gap: 20px; }
+    .feature-item { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; }
+    .feature-icon { width: 36px; height: 36px; background: #16283f; border-radius: var(--r); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .feature-icon svg { color: var(--color-accent); }
+    .feature-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .feature-desc { font-size: 14px; color: var(--color-muted); line-height: 1.65; }
+
+    /* Event anatomy — the numbers pulza puts on top of every event page */
+    .anatomy { margin-bottom: 40px; }
+    .anatomy-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    .anatomy-cell { border: 1px solid var(--color-border); border-radius: var(--r); background: var(--color-surface); padding: 14px 10px; text-align: center; }
+    .anatomy-value { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 2px; }
+    .anatomy-key { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-muted); }
+    .anatomy-note, .gate-note { font-size: 13px; color: var(--color-muted); line-height: 1.65; margin-top: 12px; }
+
+    /* Clustering gates — all three must pass before two events merge */
+    .gates { margin-bottom: 40px; }
+    .gate-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .gate { border: 1px solid var(--color-border); border-radius: var(--r); background: var(--color-surface); padding: 16px; }
+    .gate-kind { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-bottom: 8px; }
+    .gate-rule { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; font-weight: 600; color: #4ade80; margin-bottom: 8px; }
+    .gate-desc { font-size: 13px; color: var(--color-muted); line-height: 1.6; }
+
+    /* Sidebar */
+    .sidebar { position: sticky; top: calc(var(--nav-h) + 24px); }
+    .sidebar-card { border: 1px solid var(--color-border); border-radius: var(--r); padding: 20px; margin-bottom: 16px; }
+    .sidebar-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-bottom: 12px; }
+    .tech-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+    .tech-tag { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 4px; padding: 3px 9px; font-size: 12px; font-weight: 500; }
+    .sidebar-links { display: flex; flex-direction: column; gap: 10px; }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      border: 1px solid var(--color-border); border-radius: var(--r);
+      font-size: 14px; font-weight: 500; text-decoration: none; color: var(--color-text);
+      transition: all 0.15s;
+    }
+    .sidebar-link:hover { border-color: var(--color-accent); color: var(--color-accent-2, #60a5fa); background: rgba(37,99,235,0.14); }
+    .sidebar-link.primary { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+    .sidebar-link.primary:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); }
+    .sidebar-meta { display: flex; flex-direction: column; gap: 12px; }
+    .sidebar-meta-row { display: flex; flex-direction: column; gap: 2px; }
+    .sidebar-meta-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-muted); }
+    .sidebar-meta-value { font-size: 13px; font-weight: 500; }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--color-border); padding: 24px; text-align: center; margin-top: 80px; }
+    footer p { font-size: 13px; color: var(--color-muted); }
+
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 4px; padding: 1px 5px; color: var(--color-text); }
+
+    :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+
+    @media (max-width: 768px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .phone-strip { grid-template-columns: repeat(2, 1fr); }
+      .anatomy-grid { grid-template-columns: repeat(2, 1fr); }
+      .gate-grid { grid-template-columns: 1fr; }
+      .container { padding: 40px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav aria-label="Primary">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo" aria-label="Back to home">
+      <img src="../media/profiles/pixel_profile_icon.png" alt="Hung-Yu Lin pixel icon" width="180" height="180" decoding="async">
+    </a>
+    <a href="../index.html#projects" class="nav-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to Projects
+    </a>
+  </div>
+</nav>
+
+<main>
+  <div class="container">
+
+    <!-- Header -->
+    <header class="project-header">
+      <p class="project-label">iOS · SwiftUI · FastAPI · pgvector</p>
+      <div class="project-title-row">
+        <img class="app-icon" src="../media/projects/pulza_icon.png" alt="pulza app icon" width="180" height="180" decoding="async">
+        <h1 class="project-title">pulza</h1>
+      </div>
+      <p class="project-tagline">A news app that shows you the shape of a story instead of a feed. Reports from thousands of outlets are clustered into single events, plotted on a live world map, and summarised so you can see what happened, how big it is, and where — at a glance.</p>
+      <div class="project-header-meta">
+        <span class="badge live">Live on the App Store</span>
+        <span class="badge">iOS 17.6+</span>
+        <span class="badge">SwiftUI</span>
+        <span class="badge">MapKit</span>
+        <span class="badge">FastAPI</span>
+        <span class="badge">pgvector</span>
+        <span class="badge">5 languages</span>
+        <span class="badge">Free</span>
+      </div>
+    </header>
+
+    <!-- Media showcase -->
+    <section class="media-section" aria-label="App screenshots">
+      <div class="phone-strip">
+        <div class="phone-slot">
+          <div class="phone-slot-media">
+            <img src="../media/projects/pulza_map.jpg" alt="World news map with glowing hotspots over East Asia, event cards showing story and source counts, and a live channel marker" width="560" height="1214" loading="lazy" decoding="async">
+          </div>
+          <span>World News Map</span>
+        </div>
+        <div class="phone-slot">
+          <div class="phone-slot-media">
+            <img src="../media/projects/pulza_trending.jpg" alt="Trending tab with For You and Top segments, ranked breaking stories with article and source counts" width="560" height="1214" loading="lazy" decoding="async">
+          </div>
+          <span>Trending &amp; For You</span>
+        </div>
+        <div class="phone-slot">
+          <div class="phone-slot-media">
+            <img src="../media/projects/pulza_event.jpg" alt="Event page showing 311 stories from 124 sources across 12 countries, importance and scope, and an AI summary" width="560" height="1214" loading="lazy" decoding="async">
+          </div>
+          <span>Event Page &amp; AI Summary</span>
+        </div>
+        <div class="phone-slot">
+          <div class="phone-slot-media">
+            <img src="../media/projects/pulza_timeline.jpg" alt="How it developed timeline with per-day article counts, and the full coverage list of contributing outlets" width="560" height="1214" loading="lazy" decoding="async">
+          </div>
+          <span>Timeline &amp; Coverage</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main content + Sidebar -->
+    <div class="content-grid">
+      <div>
+
+        <!-- Overview -->
+        <section class="overview" aria-label="Overview">
+          <h2 class="section-heading">Overview</h2>
+          <div class="overview-text">
+            <p>Most news apps hand you an endless list of articles and leave you to work out which ones are the same story. <strong>pulza inverts that.</strong> The unit you read is the event, not the article — reports from thousands of outlets are clustered server-side into a single event, and everything the app shows you hangs off that: how many outlets picked it up, how many countries, how it developed day by day, and where in the world it is happening.</p>
+            <p>The signature view is a <strong>dark MapKit world map</strong> where events surface as hotspots that glow by severity. Tapping one opens the event; live broadcast channels appear as their own markers. It turns "what is happening right now" into something you scan spatially rather than scroll through.</p>
+            <p>pulza is a <strong>shipped product</strong>, not a prototype — published on the App Store, localised into five languages, with Home and Lock Screen widgets, breaking-news alerts, and a daily briefing delivered at a time the reader chooses.</p>
+            <p>All of it runs on <strong>a single Oracle Cloud Always Free ARM VM</strong>. One Ubuntu box holds the FastAPI service, nginx splitting production from staging by domain, and a self-hosted PostgreSQL 16 bound to localhost. The API carries <strong>six dependencies and no ORM</strong> — every query is hand-written SQL — because on a free-tier machine the cost of a framework is measured in the requests it can no longer serve.</p>
+          </div>
+        </section>
+
+        <!-- Event anatomy -->
+        <section class="anatomy" aria-label="Anatomy of an event">
+          <h2 class="section-heading">Anatomy of an event</h2>
+          <div class="anatomy-grid">
+            <div class="anatomy-cell"><p class="anatomy-value">311</p><p class="anatomy-key">Stories</p></div>
+            <div class="anatomy-cell"><p class="anatomy-value">124</p><p class="anatomy-key">Sources</p></div>
+            <div class="anatomy-cell"><p class="anatomy-value">12</p><p class="anatomy-key">Countries</p></div>
+            <div class="anatomy-cell"><p class="anatomy-value">Notable</p><p class="anatomy-key">Importance</p></div>
+            <div class="anatomy-cell"><p class="anatomy-value">Global</p><p class="anatomy-key">Scope</p></div>
+          </div>
+          <p class="anatomy-note">Every event page opens with these five numbers, taken from a real event in the app. They answer the question a headline never does — not just what happened, but how widely it is being reported and how far it reaches.</p>
+        </section>
+
+        <!-- Clustering -->
+        <section class="gates" aria-label="How events are clustered">
+          <h2 class="section-heading">How two reports become one event</h2>
+          <p class="overview-text" style="margin-bottom:16px;">Every incoming article is embedded with <strong>text-embedding-3-small</strong> and matched against existing events through an HNSW cosine index over a 512-dimension <code>events.embedding</code> column. A match only merges if it clears all three gates — semantic similarity alone is not enough, because two unrelated stories can describe the same kind of thing on opposite sides of the world.</p>
+          <div class="gate-grid">
+            <div class="gate">
+              <p class="gate-kind">Semantic</p>
+              <p class="gate-rule">cosine ≥ 0.55</p>
+              <p class="gate-desc">The article's embedding has to sit close enough to the event's centroid in meaning, not just share keywords.</p>
+            </div>
+            <div class="gate">
+              <p class="gate-kind">Geographic</p>
+              <p class="gate-rule">distance ≤ 1500 km</p>
+              <p class="gate-desc">Two similarly-worded reports about different regions stay separate events, which is what keeps the map honest.</p>
+            </div>
+            <div class="gate">
+              <p class="gate-kind">Temporal</p>
+              <p class="gate-rule">last_seen ≤ 72 h</p>
+              <p class="gate-desc">A dormant event stops absorbing new coverage, so a fresh development starts its own story instead of inflating an old one.</p>
+            </div>
+          </div>
+          <p class="gate-note">A second pass then compares the new events created within the same batch against each other — without it, coverage of one story arriving in the same minute would fragment into several near-identical events. If the embedder is unavailable the pipeline degrades to a deterministic grid rule (same topic, same H3 resolution-4 cell, same day) rather than failing: ingestion never stops, it just gets coarser.</p>
+        </section>
+
+        <!-- Features -->
+        <section class="features" aria-label="Key features">
+          <h2 class="section-heading">Key Features</h2>
+          <div class="feature-list">
+
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Live World News Map</p>
+                <p class="feature-desc">Events are geolocated onto a dark MapKit globe, with hotspots that glow brighter as severity rises. Cards surface the category, story count and source count inline, so the map is readable without tapping anything.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">One Event, Every Source</p>
+                <p class="feature-desc">Thousands of individual reports collapse into a single event with a full coverage list — every outlet that carried it, when, and from which country. Duplicate headlines stop being noise and start being a measurement of how big a story is.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">AI Summary &amp; Development Timeline</p>
+                <p class="feature-desc">Each event carries a <strong>gpt-4o-mini</strong> summary reconciling what the sources agree and disagree on, plus a "how it developed" timeline tracking the story day by day — up to two weeks back — with the article count behind each step. Summaries are generated lazily and cached per language: nothing is spent on an event nobody opens.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Trending, Ranked Two Ways</p>
+                <p class="feature-desc">A "Top" board ranked by how hard a story is breaking globally, and a "For You" board matched against a <code>taste_embedding</code> held on the reader's profile and compared to events through the same vector index. Both show the raw evidence — article count, source count, and how long ago it broke.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Live Channels Worldwide</p>
+                <p class="feature-desc">Channels from dozens of countries, with live chat and a viewer count, pinned to the map where they broadcast from. The schema supports HLS, YouTube and external sources, but production ships <strong>external only</strong> — App Review guideline 5.2.2 means every channel opens the broadcaster's own page. The in-app player is written and dormant, ready for the day the licensing exists.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Alerts That Respect Attention</p>
+                <p class="feature-desc">Breaking alerts fire the moment something major happens anywhere in the world, but followed stories only notify when the story actually develops — not every five minutes. A single daily briefing arrives at a time the reader picks.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              </div>
+              <div>
+                <p class="feature-title">Five Languages, and Widgets</p>
+                <p class="feature-desc">Headlines and summaries are served in English, 中文, 日本語, 한국어 and Español. Home and Lock Screen widgets carry top stories, a live map, and the stories the reader follows.</p>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar" aria-label="Project details">
+        <div class="sidebar-card">
+          <p class="sidebar-label">Links</p>
+          <div class="sidebar-links">
+            <a href="https://apps.apple.com/us/app/pulza/id6789653201" class="sidebar-link primary" target="_blank" rel="noopener noreferrer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Get it on the App Store
+            </a>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <p class="sidebar-label">Tech Stack</p>
+          <div class="tech-tags">
+            <span class="tech-tag">Swift</span>
+            <span class="tech-tag">SwiftUI</span>
+            <span class="tech-tag">MapKit</span>
+            <span class="tech-tag">WidgetKit</span>
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">FastAPI</span>
+            <span class="tech-tag">PostgreSQL 16</span>
+            <span class="tech-tag">pgvector</span>
+            <span class="tech-tag">nginx</span>
+            <span class="tech-tag">Oracle Cloud (ARM)</span>
+            <span class="tech-tag">GPT-4o-mini</span>
+            <span class="tech-tag">Supabase Auth</span>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <p class="sidebar-label">Details</p>
+          <div class="sidebar-meta">
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Platform</span>
+              <span class="sidebar-meta-value">iOS 17.6+</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Type</span>
+              <span class="sidebar-meta-value">Shipped Product</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Category</span>
+              <span class="sidebar-meta-value">News · Free</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Languages</span>
+              <span class="sidebar-meta-value">EN · 中文 · 日本語 · 한국어 · ES</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Infrastructure</span>
+              <span class="sidebar-meta-value">1 × OCI Always Free ARM VM</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Retrieval</span>
+              <span class="sidebar-meta-value">HNSW cosine · 512-dim</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-label">Role</span>
+              <span class="sidebar-meta-value">Solo — design, app, backend</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <p><a href="../index.html" style="color: inherit; text-decoration: none;">← Hung-Yu Lin</a> &nbsp;·&nbsp; Designed &amp; Built by Hung-Yu Lin &copy; 2026</p>
+</footer>
+
+</body>
+</html>
