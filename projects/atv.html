@@ -57,11 +57,11 @@
     .media-section { margin-bottom: 56px; }
 
     .demo-hero { border: 1px solid var(--color-border); border-radius: 10px; aspect-ratio: 16/9; overflow: hidden; margin-bottom: 10px; background: #0a0a0a; }
-    .demo-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .demo-hero img, .demo-hero video { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .screenshot-wide { border: 1px solid var(--color-border); border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
     .screenshot-wide-media { aspect-ratio: 16/7; overflow: hidden; }
-    .screenshot-wide-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .screenshot-wide-media img, .screenshot-wide-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
     .screenshot-caption { padding: 8px 14px; font-size: 12px; font-weight: 500; color: var(--color-muted); border-top: 1px solid var(--color-border); background: var(--color-surface); }
 
     .screenshots-strip { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -176,13 +176,17 @@
 
       <!-- Main demo GIF — third-person view -->
       <div class="demo-hero">
-        <img src="../media/projects/third-person-POV-ATV.gif" alt="Autonomous robot car navigating lane — third-person view">
+        <video src="../media/projects/third-person-POV-ATV.mp4" poster="../media/projects/third-person-POV-ATV.jpg"
+                 width="960" height="540" loop muted playsinline preload="none" data-inview-play
+                 aria-label="Autonomous robot car navigating lane — third-person view"></video>
       </div>
 
       <!-- First-person POV with vision overlay -->
       <div class="screenshot-wide">
         <div class="screenshot-wide-media">
-          <img src="../media/projects/first-person-POV-ATV.gif" alt="iPhone camera feed showing YOLO lane segmentation and depth overlay at 15 FPS">
+          <video src="../media/projects/first-person-POV-ATV.mp4" poster="../media/projects/first-person-POV-ATV.jpg"
+                 width="960" height="442" loop muted playsinline preload="none" data-inview-play
+                 aria-label="iPhone camera feed showing YOLO lane segmentation and depth overlay at 15 FPS"></video>
         </div>
         <p class="screenshot-caption">First-Person Vision Debug Overlay — Lane Segmentation · Depth Estimation · Object Detection Boxes · 15 FPS on-device inference</p>
       </div>
@@ -191,13 +195,13 @@
       <div class="screenshots-strip">
         <div class="screenshot-slot">
           <div class="screenshot-slot-media">
-            <img src="../media/projects/ATV_UI.PNG" alt="iOS SwiftUI control interface with joystick and speed readout">
+            <img src="../media/projects/ATV_UI.jpg" alt="iOS SwiftUI control interface with joystick and speed readout" width="1000" height="461" loading="lazy" decoding="async">
           </div>
           <span>iOS Control Interface</span>
         </div>
         <div class="screenshot-slot">
           <div class="screenshot-slot-media">
-            <img src="../media/projects/ATV.jpeg" alt="4-wheel Raspberry Pi robot car hardware with L298N motor driver">
+            <img src="../media/projects/ATV_hardware.jpg" alt="4-wheel Raspberry Pi robot car hardware with L298N motor driver" width="1000" height="750" loading="lazy" decoding="async">
           </div>
           <span>Hardware Platform</span>
         </div>
@@ -356,5 +360,23 @@
   <p><a href="../index.html" style="color: inherit; text-decoration: none;">← Hung-Yu Lin</a> &nbsp;·&nbsp; Designed &amp; Built by Hung-Yu Lin &copy; 2026</p>
 </footer>
 
+<script>
+/* Demo videos load and play only while on screen; poster stands in otherwise. */
+(function () {
+  var vids = document.querySelectorAll('video[data-inview-play]');
+  if (!vids.length) return;
+  if (!('IntersectionObserver' in window)) {
+    vids.forEach(function (v) { v.play().catch(function () {}); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.play().catch(function () {}); }
+      else { e.target.pause(); }
+    });
+  }, { threshold: 0.25 });
+  vids.forEach(function (v) { io.observe(v); });
+})();
+</script>
 </body>
 </html>

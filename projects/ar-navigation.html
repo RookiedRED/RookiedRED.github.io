@@ -57,7 +57,7 @@
     .media-section { margin-bottom: 56px; }
 
     .demo-hero { border: 1px solid var(--color-border); border-radius: 10px; aspect-ratio: 16/9; overflow: hidden; margin-bottom: 10px; background: #0a0a0a; }
-    .demo-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .demo-hero img, .demo-hero video { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .screenshot-wide { border: 1px solid var(--color-border); border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
     .screenshot-wide-media { aspect-ratio: 16/7; overflow: hidden; }
@@ -164,13 +164,15 @@
 
       <!-- Main demo GIF -->
       <div class="demo-hero">
-        <img src="../media/projects/Inception_demo.gif" alt="Inception AR Navigation live demo">
+        <video src="../media/projects/Inception_demo.mp4" poster="../media/projects/Inception_demo.jpg"
+                 width="800" height="368" loop muted playsinline preload="none" data-inview-play
+                 aria-label="Inception AR Navigation live demo"></video>
       </div>
 
       <!-- Wide detection screenshot -->
       <div class="screenshot-wide">
         <div class="screenshot-wide-media">
-          <img src="../media/projects/Inception_detection.PNG" alt="Real-time object detection — laptop 0.7m, TV 0.9m, keyboard 0.6m at 42.4ms">
+          <img src="../media/projects/Inception_detection.jpg" alt="Real-time object detection — laptop 0.7m, TV 0.9m, keyboard 0.6m at 42.4ms" width="1600" height="738" loading="lazy" decoding="async">
         </div>
         <p class="screenshot-caption">Real-time Object Detection — 42.4 ms on-device inference · 4 objects with distance labels</p>
       </div>
@@ -179,19 +181,19 @@
       <div class="screenshots-strip">
         <div class="screenshot-slot">
           <div class="screenshot-slot-media">
-            <img src="../media/projects/Inception_main_view.PNG" alt="A* navigation route on AR point-cloud mesh">
+            <img src="../media/projects/Inception_main_view.jpg" alt="A* navigation route on AR point-cloud mesh" width="700" height="323" loading="lazy" decoding="async">
           </div>
           <span>A* Navigation Route</span>
         </div>
         <div class="screenshot-slot">
           <div class="screenshot-slot-media">
-            <img src="../media/projects/Inception_navigation.PNG" alt="Navigate to destination prompt on AR mesh">
+            <img src="../media/projects/Inception_navigation.jpg" alt="Navigate to destination prompt on AR mesh" width="700" height="323" loading="lazy" decoding="async">
           </div>
           <span>Destination Selection</span>
         </div>
         <div class="screenshot-slot">
           <div class="screenshot-slot-media">
-            <img src="../media/projects/Inception_minimap.PNG" alt="Top-down spatial minimap of scanned room">
+            <img src="../media/projects/Inception_minimap.jpg" alt="Top-down spatial minimap of scanned room" width="700" height="323" loading="lazy" decoding="async">
           </div>
           <span>Spatial Minimap</span>
         </div>
@@ -320,5 +322,23 @@
   <p><a href="../index.html" style="color: inherit; text-decoration: none;">← Hung-Yu Lin</a> &nbsp;·&nbsp; Designed &amp; Built by Hung-Yu Lin &copy; 2026</p>
 </footer>
 
+<script>
+/* Demo videos load and play only while on screen; poster stands in otherwise. */
+(function () {
+  var vids = document.querySelectorAll('video[data-inview-play]');
+  if (!vids.length) return;
+  if (!('IntersectionObserver' in window)) {
+    vids.forEach(function (v) { v.play().catch(function () {}); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.play().catch(function () {}); }
+      else { e.target.pause(); }
+    });
+  }, { threshold: 0.25 });
+  vids.forEach(function (v) { io.observe(v); });
+})();
+</script>
 </body>
 </html>

@@ -53,7 +53,7 @@
     .demo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .demo-card { border: 1px solid var(--color-border); border-radius: 10px; overflow: hidden; background: var(--color-surface); }
     .demo-media { aspect-ratio: 16/9; overflow: hidden; }
-    .demo-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .demo-media img, .demo-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
     .demo-caption { padding: 8px 12px; font-size: 12px; font-weight: 500; color: var(--color-muted); text-align: center; border-top: 1px solid var(--color-border); }
 
     /* UI screenshots */
@@ -188,19 +188,25 @@
       <div class="demo-grid">
         <div class="demo-card">
           <div class="demo-media">
-            <img src="../media/projects/MemoryVault-AI_ask_resume.gif" alt="Asking about resume job opportunities">
+            <video src="../media/projects/MemoryVault-AI_ask_resume.mp4" poster="../media/projects/MemoryVault-AI_ask_resume.jpg"
+                 width="640" height="564" loop muted playsinline preload="none" data-inview-play
+                 aria-label="Asking about resume job opportunities"></video>
           </div>
           <p class="demo-caption">Resume Q&amp;A</p>
         </div>
         <div class="demo-card">
           <div class="demo-media">
-            <img src="../media/projects/MemoryVault-AI_ask_bank.gif" alt="Privacy-guarded bank password query">
+            <video src="../media/projects/MemoryVault-AI_ask_bank.mp4" poster="../media/projects/MemoryVault-AI_ask_bank.jpg"
+                 width="640" height="564" loop muted playsinline preload="none" data-inview-play
+                 aria-label="Privacy-guarded bank password query"></video>
           </div>
           <p class="demo-caption">Privacy Guard</p>
         </div>
         <div class="demo-card">
           <div class="demo-media">
-            <img src="../media/projects/MemoryVault-AI_upload_file.gif" alt="Quick actions and file upload flow">
+            <video src="../media/projects/MemoryVault-AI_upload_file.mp4" poster="../media/projects/MemoryVault-AI_upload_file.jpg"
+                 width="640" height="564" loop muted playsinline preload="none" data-inview-play
+                 aria-label="Quick actions and file upload flow"></video>
           </div>
           <p class="demo-caption">Quick Actions &amp; File Import</p>
         </div>
@@ -214,13 +220,13 @@
         <div class="ui-row-wide">
           <div class="ui-card">
             <div class="ui-media-wide">
-              <img src="../media/projects/MemoryVault-AI_Home.png" alt="Ask bar with Recent, Summary, Ideas quick actions">
+              <img src="../media/projects/MemoryVault-AI_Home.png" alt="Ask bar with Recent, Summary, Ideas quick actions" width="992" height="224" loading="lazy" decoding="async">
             </div>
             <p class="ui-caption">Ask Bar &amp; Quick Actions</p>
           </div>
           <div class="ui-card">
             <div class="ui-media-qa">
-              <img src="../media/projects/MemoryVault-AI_Ask_gamil.png" alt="Q&A answer with source attribution and privacy labels">
+              <img src="../media/projects/MemoryVault-AI_Ask_gamil.png" alt="Q&A answer with source attribution and privacy labels" width="992" height="492" loading="lazy" decoding="async">
             </div>
             <p class="ui-caption">Q&amp;A with Source Labels</p>
           </div>
@@ -228,13 +234,13 @@
         <div class="ui-row-tall">
           <div class="ui-card">
             <div class="ui-media-tall">
-              <img src="../media/projects/MemoryVault-AI_Settings.png" alt="Settings panel showing model status and privacy toggles">
+              <img src="../media/projects/MemoryVault-AI_Settings.png" alt="Settings panel showing model status and privacy toggles" width="992" height="1040" loading="lazy" decoding="async">
             </div>
             <p class="ui-caption">Settings</p>
           </div>
           <div class="ui-card">
             <div class="ui-media-tall">
-              <img src="../media/projects/MemoryVault-AI_Vault.png" alt="Knowledge Vault file browser with folder tabs">
+              <img src="../media/projects/MemoryVault-AI_Vault.png" alt="Knowledge Vault file browser with folder tabs" width="992" height="1080" loading="lazy" decoding="async">
             </div>
             <p class="ui-caption">Knowledge Vault</p>
           </div>
@@ -523,5 +529,23 @@
   <p><a href="../index.html" style="color:inherit;text-decoration:none;">← Hung-Yu Lin</a> &nbsp;·&nbsp; Designed &amp; Built by Hung-Yu Lin &copy; 2026</p>
 </footer>
 
+<script>
+/* Demo videos load and play only while on screen; poster stands in otherwise. */
+(function () {
+  var vids = document.querySelectorAll('video[data-inview-play]');
+  if (!vids.length) return;
+  if (!('IntersectionObserver' in window)) {
+    vids.forEach(function (v) { v.play().catch(function () {}); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.play().catch(function () {}); }
+      else { e.target.pause(); }
+    });
+  }, { threshold: 0.25 });
+  vids.forEach(function (v) { io.observe(v); });
+})();
+</script>
 </body>
 </html>
